@@ -1,0 +1,135 @@
+import java.util.Scanner;
+
+public class MazeGame {
+    private static final int SIZE = 10;
+    private static int[][] maze = new int[SIZE][SIZE];
+    private static int playerX = 0; // Player's starting X position
+    private static int playerY = 0; // Player's starting Y position
+
+    public static void main(String[] args) {
+        initializeMaze();
+        printMaze();
+
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("Move with W (up), S (down), A (left), D (right). Enter your move:");
+            String move = scanner.nextLine();
+            if (move(move.toUpperCase())) {
+                System.out.println("You moved!");
+                if (isWin()) {
+                    System.out.println("Congratulations, you escaped the maze!");
+                    break;
+                }
+            } else {
+                System.out.println("Invalid move. Try again.");
+            }
+            printMaze();
+        }
+        scanner.close();
+    }
+
+private static void initializeMaze() {
+    //This is a simple 10 by 10 maze. I might make it larger and more complex later. I might also add an enemy that follows the player
+    int[][] tempMaze = {
+               { 0, 1, 0,0,0,0,0,0,0,0 },
+			   { 0, 1, 0,0,0,0,1,1,1,0 },
+			   { 0, 1, 1,1,1,0,1,0,1,0 },
+			   { 0, 1, 0,0,0,0,0,0,0,0 },
+			   { 0, 0, 0,0,1,0,1,0,1,0 },
+			   { 1, 1, 1,0,1,0,1,0,0,0 },
+			   { 1, 1, 1,0,1,0,1,0,1,1 },
+			   { 0, 0, 0,0,1,0,1,0,1,1 },
+			   { 1, 0, 1,1,1,0,1,0,0,0 },
+			   { 1, 0, 0,0,0,0,1,1,1,0 }
+    };
+
+    // Copy the tempMaze into the maze array
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            maze[i][j] = tempMaze[i][j];
+        }
+    }
+}
+
+    // private static void initializeMaze() {
+    //     // Fill the maze with walls (1) and spaces (0)
+    //     // This is a simple fixed maze for demonstration.
+    //     for (int i = 0; i < SIZE; i++) {
+    //         for (int j = 0; j < SIZE; j++) {
+    //             maze[i][j] = 1; // Initialize all cells as walls
+    //         }
+    //     }
+
+    //     // Create a simple path through the maze
+    //     for (int i = 0; i < SIZE; i++) {
+    //         maze[i][0] = 0;
+    //         maze[9][i] = 0;
+    //     }
+    //     maze[0][1] = 0; // Starting point
+    //     maze[1][1] = 0;
+    //     maze[2][1] = 0;
+    //     maze[3][1] = 0;
+    //     maze[3][2] = 0;
+    //     maze[3][3] = 0;
+    //     maze[3][4] = 0;
+    //     maze[3][5] = 0;
+    //     maze[3][6] = 0;
+    //     maze[3][7] = 0;
+    //     maze[3][8] = 0;
+    //     maze[3][9] = 0;
+    //     maze[4][9] = 0;
+    //     maze[5][9] = 0;
+    //     maze[6][9] = 0;
+    //     maze[7][9] = 0;
+    //     maze[8][9] = 0;
+    // }
+
+    private static boolean move(String direction) {
+        switch (direction) {
+            case "W": // Move up
+                if (playerX > 0 && maze[playerX - 1][playerY] == 0) {
+                    playerX--;
+                    return true;
+                }
+                break;
+            case "S": // Move down
+                if (playerX < SIZE - 1 && maze[playerX + 1][playerY] == 0) {
+                    playerX++;
+                    return true;
+                }
+                break;
+            case "A": // Move left
+                if (playerY > 0 && maze[playerX][playerY - 1] == 0) {
+                    playerY--;
+                    return true;
+                }
+                break;
+            case "D": // Move right
+                if (playerY < SIZE - 1 && maze[playerX][playerY + 1] == 0) {
+                    playerY++;
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
+
+    private static boolean isWin() {
+        return playerX == SIZE - 1 && playerY == SIZE - 1;
+    }
+
+    private static void printMaze() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (i == playerX && j == playerY) {
+                    System.out.print("P "); // Print the player position
+                } else if (maze[i][j] == 1) {
+                    System.out.print("# "); // Print walls
+                } else {
+                    System.out.print(". "); // Print empty spaces
+                }
+            }
+            System.out.println();
+        }
+    }
+}
